@@ -1,1 +1,51 @@
-asdfg
+
+# A very simple Flask Hello World app for you to get started with...
+
+from flask import Flask, request, json
+import json
+import re
+import requests
+
+
+app = Flask(__name__)
+
+
+@app.route('/')
+def hello():
+
+
+    return 'Webhooks with Python'
+
+@app.route('/busca_cep')
+def api_busca_cep():
+    cep = '08780570'
+    cep = request.args.get('cep')
+    url = 'https://viacep.com.br/ws/'+ cep +'/json/'
+    headers = {'User-Agent': 'Autociencia/1.0'}
+    resposta = requests.request('GET', url, headers=headers)
+    conteudo = resposta.content.decode('utf-8')
+    resposta.close()
+    endereco = json.loads(conteudo)
+
+    return endereco
+
+@app.route('/calcular_frete_sedex')
+def api_calcula_sedex():
+
+    peso = 1
+
+
+    cep_origem = '08780570'
+    cep_destino = '08780570'
+    cep_destino = request.args.get('cep_destino')
+    peso = request.args.get('peso')
+    url = 'http://www.inotech.com.br/correios/calcular_frete.php?cep_origem='+ cep_origem + '&cep_destino='+ cep_destino + '&peso='+ peso + '&servico=Sedex&cd_empresa=11088656&ps_empresa=49264351'
+
+
+
+    resposta = requests.request('GET', url)
+    conteudo = resposta.content.decode('utf-8')
+    resposta.close()
+    resultado = conteudo
+
+    return resultado
